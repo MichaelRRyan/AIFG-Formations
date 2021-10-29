@@ -91,3 +91,48 @@ void Flock::cFormation(int fLeader)
 		}
 	}
 }
+
+void Flock::vFormation(int fLeader)
+{
+	int fSize = flock.size();
+	Boid& target = flock[fLeader];
+	Pvector leaderDir = target.velocity;
+	leaderDir.normalize();
+	float idealDistance = 3.0f * static_cast<float>(fSize);
+	float closeEnough = 100.0f;
+
+	for (int i = 0; i < fSize; i++)
+	{
+		if (i == fLeader)
+		{
+			target.velocity.normalize();
+			target.velocity.mulScalar(target.maxSpeed * .4);
+			target.update();
+			target.borders();
+		}
+		else
+		{
+			Pvector perpDir = { -leaderDir.y, leaderDir.x }; // Perpendicular to the direction.
+			float halfSizeFloat = static_cast<float>(fSize - 1) / 2.0f; // - 1 to ignore the leader.
+			float floatI = static_cast<float>(i);
+			float horizontalPos = (floatI - halfSizeFloat) / halfSizeFloat;
+			float verPos = (halfSizeFloat - abs(halfSizeFloat - floatI)) / halfSizeFloat;
+			Pvector horOffset = perpDir * (idealDistance * horizontalPos);
+			Pvector verOffset = leaderDir * (idealDistance * verPos);
+			Pvector dest = target.location + horOffset + verOffset;
+
+			float distToDest = dest.distance(flock[i].location);
+			if (distToDest > closeEnough)
+			{
+				Pvector force = dest - flock[i].location;
+				force.normalize();
+				force = force * min(flock[i].maxSpeed * 2.0f, distToDest);
+				flock[i].applyForce(force);
+				flock[i].update();
+				flock[i].borders();
+			}
+			else
+				flock[i].velocity = flock[fLeader].velocity; //Match the leader's velocity if we are close enough
+		}
+	}
+}

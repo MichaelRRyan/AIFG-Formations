@@ -163,3 +163,18 @@ Pvector Pvector::copy(Pvector v)
 
 	return copy;
 }
+
+Pvector Pvector::operator+(Pvector const & t_right)
+{
+	return { x + t_right.x, y + t_right.y };
+}
+
+Pvector Pvector::operator-(Pvector const& t_right)
+{
+	return { x - t_right.x, y - t_right.y };
+}
+
+Pvector Pvector::operator*(float const & t_right)
+{
+	return { x * t_right, y * t_right };
+}

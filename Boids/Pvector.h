@@ -62,7 +62,11 @@ public:
 	float angleBetween(Pvector v);
 	void normalize();
 
-	Pvector copy(Pvector v);	
+	Pvector copy(Pvector v);
+
+	Pvector operator+(Pvector const& t_right);
+	Pvector operator-(Pvector const & t_right);
+	Pvector operator*(float const & t_right);
 };
 
 #endif

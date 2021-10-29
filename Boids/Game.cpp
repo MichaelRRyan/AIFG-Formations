@@ -14,7 +14,8 @@ Game::Game() :
 	m_ACTION_NAMES {
 		"Flock",
 		"Swarm",
-		"CircleFormation"
+		"CircleFormation",
+		"VFormation"
 	}
 // Tying to create window using desktop values did not work here.
 // So used the Create method inside the constructor/
@@ -107,17 +108,13 @@ void Game::processEvents()
 	while (m_window.pollEvent(newEvent))
 	{
 		if (sf::Event::Closed == newEvent.type) // window message
-		{
 			m_exitGame = true;
-		}
-		if (sf::Event::KeyPressed == newEvent.type) //user pressed a key
-		{
+
+		else if (sf::Event::KeyPressed == newEvent.type) //user pressed a key
 			processKeys(newEvent);
-		}
-		if (sf::Event::MouseButtonPressed == newEvent.type || sf::Event::MouseButtonReleased == newEvent.type) //user pressed a key
-		{
+
+		else if (sf::Event::MouseButtonPressed == newEvent.type || sf::Event::MouseButtonReleased == newEvent.type) //user pressed a key
 			processMouse(newEvent);
-		}
 	}
 }
 
@@ -134,6 +131,11 @@ void Game::processKeys(sf::Event t_event)
 	else if (sf::Keyboard::C == t_event.key.code)
 	{
 		m_action = Action::CircleFormation;
+		leader = rand() % flock.getSize();
+	}
+	else if (sf::Keyboard::V == t_event.key.code)
+	{
+		m_action = Action::VFormation;
 		leader = rand() % flock.getSize();
 	}
 	else if (sf::Keyboard::Space == t_event.key.code)
@@ -209,12 +211,16 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		flock.cFormation(leader);
 		shapes[leader].setFillColor(sf::Color::Red);
-
 	}
-	else
+	else if (m_action == Action::Swarm)
 	{
 		flock.swarming();
 		shapes[leader].setFillColor(sf::Color::Green);
+	}
+	else
+	{
+		flock.vFormation(leader);
+		shapes[leader].setFillColor(sf::Color::Red);
 	}
 
 	if (m_exitGame)

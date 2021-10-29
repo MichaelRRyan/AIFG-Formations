@@ -49,12 +49,13 @@ private:
 	Flock flock;
 	vector<sf::CircleShape> shapes;
 
-	const string m_ACTION_NAMES[3];
+	const string m_ACTION_NAMES[4];
 
 	enum class Action {
 		Flock = 0,
 		Swarm = 1,
-		CircleFormation = 2
+		CircleFormation = 2,
+		VFormation = 3
 	} m_action;
 
 };

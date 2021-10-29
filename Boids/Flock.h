@@ -41,6 +41,7 @@ public:
 	void flocking();
 	void swarming();
 	void cFormation(int fLeader);
+	void vFormation(int fLeader);
 
 };
 
