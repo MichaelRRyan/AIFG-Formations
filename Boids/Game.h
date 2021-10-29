@@ -41,7 +41,6 @@ private:
 
 	float boidsSize = 3;
 	float enemySize = 10;
-	string action = "flock";
 	int leader = 0;
 
 	bool close = false;
@@ -49,6 +48,14 @@ private:
 	//Create flock, vector of shapes, and initialize boids
 	Flock flock;
 	vector<sf::CircleShape> shapes;
+
+	const string m_ACTION_NAMES[3];
+
+	enum class Action {
+		Flock = 0,
+		Swarm = 1,
+		CircleFormation = 2
+	} m_action;
 
 };
 

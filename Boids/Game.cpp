@@ -9,7 +9,13 @@ using namespace std;
 /// load and setup the text 
 /// load and setup the image
 /// </summary>
-Game::Game() 
+Game::Game() :
+	m_action{ Action::Flock },
+	m_ACTION_NAMES {
+		"Flock",
+		"Swarm",
+		"CircleFormation"
+	}
 // Tying to create window using desktop values did not work here.
 // So used the Create method inside the constructor/
 // sf::RenderWindow m_window( sf::VideoMode(desktop.width - 100, desktop.height - 100, desktop.bitsPerPixel), "Flocking", sf::Style::None );
@@ -33,7 +39,7 @@ Game::Game()
 	else
 		std::cout << "successfully loaded ariblk.ttf font file" << std::endl;
 
-	for (int i = 0; i < 50; i++) //Number of boids is hardcoded for testing pusposes.
+	for (int i = 0; i < 100; i++) //Number of boids is hardcoded for testing pusposes.
 	{
 		//Boid b(rand() % window_width, rand() % window_height); //Starts the boid with a random position in the window.
 		Boid b(window_width / 3, window_height / 3); //Starts all boids in the center of the screen
@@ -123,17 +129,17 @@ void Game::processEvents()
 void Game::processKeys(sf::Event t_event)
 {
 	if (sf::Keyboard::Escape == t_event.key.code)
-	{
 		m_exitGame = true;
-	}
+	
 	else if (sf::Keyboard::C == t_event.key.code)
-		action = "cformation";
+	{
+		m_action = Action::CircleFormation;
+		leader = rand() % flock.getSize();
+	}
 	else if (sf::Keyboard::Space == t_event.key.code)
-		if (action == "flock")
-			action = "swarm";
-		else
-			action = "flock";
+		m_action = (m_action == Action::Flock) ? Action::Swarm : Action::Flock;
 
+	m_actionMessage.setString(m_ACTION_NAMES[static_cast<int>(m_action)]);
 }
 
 /// <summary>
@@ -194,14 +200,13 @@ void Game::update(sf::Time t_deltaTime)
 	}
 
 	//Applies the three rules to each boid in the flock and changes them accordingly.
-	if (action == "flock")
+	if (m_action == Action::Flock)
 	{
 		flock.flocking();
 		shapes[leader].setFillColor(sf::Color::Green);
 	}
-	else if (action == "cformation")
+	else if (m_action == Action::CircleFormation)
 	{
-//		int leader = 0;
 		flock.cFormation(leader);
 		shapes[leader].setFillColor(sf::Color::Red);
 
@@ -216,9 +221,6 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		m_window.close();
 	}
-	if (m_actionMessage.getString() != action)
-		m_actionMessage.setString(action);
-
 }
 
 /// <summary>
