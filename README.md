@@ -34,5 +34,5 @@ To commit saved changes to the bitbucket repo, open up Git GUI and open up the B
 
 
 ## Contributors
-Jorge Yanar
+Jorge Yanar  
 Christopher Hernandez
